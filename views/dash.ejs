@@ -1,0 +1,205 @@
+<%- include('includes/head.ejs') %>
+    <script src="/js/dash.js"></script>
+</head>
+
+<body>
+    <%- include('includes/navigation.ejs') %>
+
+    <main>
+        <div class="add-new-group">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newGroupModal">Create New Settings Group</button>
+       </div>
+        <% if (settingGroups.length > 0) { %>
+          
+                <% for (let group of settingGroups) { %>
+                   
+                            <div class="setting-group">
+                                <table class="table table-dark table-striped">
+                                    <div class="group-header"> 
+                                        <div class="group-header-delete">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteSettingModal" 
+                                            onclick="populateDeleteGroupModal('<%= group.groupName %>', '<%= group._id %>')">X</button>
+                                        </div>
+                                    <div class="group-header-name"><h1 class="group-header-name"><%= group.groupName %></h1></div>
+                                   
+                                </div>
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Key</th>
+                                        <th scope="col">Value</th>
+                                        <th scope="col">Last Updated</th>
+                                        <th scope="col" style="width:8rem">Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (group.settings.length > 0) { %>
+          
+                                            <% for (let setting of group.settings) { %>
+                                      <tr>
+                                        <th scope="row">1</th>
+                                        <td><%= setting.key %></td>
+                                        <td><%= setting.value %></td>
+                                        <td><%= setting.lastUpdated %></td>
+                                        <td><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editSettingModal" 
+                                            onclick="populateEditSettingModal('<%= group.groupName %>', '<%= group._id %>', '<%= setting.key %>', '<%= setting.value %>')">EDIT</button>
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteSettingModal" 
+                                            onclick="populateDeleteSettingModal('<%= setting.key %>', '<%= group._id %>')">X</button>
+                                        </td>
+                                      </tr>
+
+                                      <% } %>
+        
+                                      <% }  %>
+                                      <tr>
+                                        <th scope="row"></th>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSettingModal" 
+                                            onclick="populateNewSettingModal('<%= group.groupName %>', '<%= group._id %>')">ADD NEW</button></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                            </div>
+                <% } %>
+        
+        <% } else { %>
+            <h1>No Setting Groups Found!</h1>
+        <% } %>
+
+        <!-- new group modal -->
+        <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="newGroupModalTitle">Add New Settings Group</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-group-form" action="/dash/groups/add-group" method="post">
+                        <div class="form-group">
+                          <label for="groupName">Setting Group name</label>
+                          <input type="text" class="form-control" id="groupName" name="groupName">
+                        </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="new-group-form" class="btn btn-primary">Create Group</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <!-- new setting modal -->
+        <div class="modal fade" id="newSettingModal" tabindex="-1" role="dialog" aria-labelledby="newSettingModal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="newSettingModalTitle">Add New Setting</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-setting-form" action="/dash/groups/add-setting" method="post">
+                        <div class="form-group">
+                          <label for="settingKey">Setting Key</label>
+                          <input type="text" class="form-control" id="addSettingKey" name="settingKey">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingValue">Setting Value</label>
+                            <input type="text" class="form-control" id="addSettingValue" name="settingValue">
+                          </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="new-setting-form" class="btn btn-primary">Create Setting</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+           <!-- edit setting modal -->
+        <div class="modal fade" id="editSettingModal" tabindex="-1" role="dialog" aria-labelledby="editSettingModal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editSettingModalTitle">Edit Setting</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-setting-form" action="/dash/groups/edit-setting" method="post">
+                        <div class="form-group">
+                          <label for="settingKey">Setting Key</label>
+                          <input type="text" class="form-control" id="editSettingKey" name="settingKey">
+                          <input type="hidden" class="form-control" id="editSettingKeyOriginal" name="settingKeyOriginal">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingValue">Setting Value</label>
+                            <input type="text" class="form-control" id="editSettingValue" name="settingValue">
+                          </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="edit-setting-form" class="btn btn-primary">Save Changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+              <!-- delete group modal -->
+        <div class="modal fade" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="deleteGroupModal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteGroupModalTitle">Are you sure you want to delete?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form id="delete-group-form" action="/dash/groups/delete-group" method="post">
+                        
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="delete-group-form" class="btn btn-primary">Delete Group</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+                  <!-- delete setting modal -->
+        <div class="modal fade" id="deleteSettingModal" tabindex="-1" role="dialog" aria-labelledby="deleteSettingModal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteSettingModalTitle">Are you sure you want to delete?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form id="delete-setting-form" action="/dash/groups/delete-setting" method="post">
+                        
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="delete-setting-form" class="btn btn-primary">Delete Setting</button>
+                </div>
+              </div>
+            </div>
+          </div>
+   
+    </main>
+<%- include('includes/end.ejs') %>
