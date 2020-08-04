@@ -37,7 +37,13 @@ function populateDeleteSettingModal(settingKey, settingGroupId) {
 function populateGraphqlModal(groupName) {
   document.getElementById("graphqlModalTitle").innerHTML =
     "GraphQL Query for '" + groupName + "'";
-  document.getElementById("graphqlModalBody").innerHTML = `query{
-    text
-  }`;
+  document.getElementById("graphqlModalBody").innerHTML = `query{<br>
+    \u00A0\u00A0\u00A0\u00A0getSettingGroup(groupName:"${groupName}"){<br>
+    \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0groupName<br>
+    \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0settings{<br>
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0key<br>
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0value<br>
+          \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}<br>
+          \u00A0\u00A0\u00A0\u00A0}<br>
+    }`;
 }
