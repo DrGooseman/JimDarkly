@@ -42,7 +42,7 @@ module.exports = buildSchema(`
         login(email: String!, password: String!): AuthData!
         getUsers: [User]!
         getSettingGroups: [SettingGroup]!
-        getSettingGroup(groupId: String!): SettingGroup!
+        getSettingGroup(groupName: String!): SettingGroup!
     }
 
     type RootMutation {

@@ -4,6 +4,7 @@ const router = express.Router();
 
 const SettingGroup = require("../models/setting-group");
 const HttpError = require("../models/http-error");
+const settingGroup = require("../models/setting-group");
 
 router.get("/", async (req, res, next) => {
   res.redirect("/dash/groups/");
@@ -11,6 +12,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/groups/", async (req, res, next) => {
   const settingGroups = await SettingGroup.find();
+
   res.render("dash", {
     pageTitle: "Dashboard",
     path: "/dash/groups/",
@@ -80,11 +82,13 @@ router.post("/groups/edit-setting/:groupId", async (req, res, next) => {
   const settingGroup = await SettingGroup.findById(groupId);
   if (!settingGroup) return next(new HttpError("Group does not exist", 422));
 
-  const alreadyContainsKey = settingGroup.settings.some(
-    (setting) => setting.key === settingKey
-  );
-  if (alreadyContainsKey)
-    return next(new HttpError("Setting with key already exists.", 422));
+  if (settingKey !== settingKeyOriginal) {
+    const alreadyContainsKey = settingGroup.settings.some(
+      (setting) => setting.key === settingKey
+    );
+    if (alreadyContainsKey)
+      return next(new HttpError("Setting with key already exists.", 422));
+  }
 
   const setting = settingGroup.settings.find(
     (set) => set.key === settingKeyOriginal
@@ -93,6 +97,8 @@ router.post("/groups/edit-setting/:groupId", async (req, res, next) => {
 
   setting.key = settingKey;
   setting.value = settingValue;
+  setting.lastUpdated = new Date();
+
   try {
     await settingGroup.save();
   } catch (err) {

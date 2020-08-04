@@ -68,4 +68,19 @@ module.exports = {
       _id: createdSettingGroup._id.toString(),
     };
   },
+  getSettingGroup: async function ({ groupName }, req) {
+    // if (!req.isAuth) throw new HttpError("Not Authenticated!", 401);
+
+    //const user = await User.findById(req.userId);
+    //  if (!user) throw new HttpError("Invalid user!", 401);
+
+    const settingGroup = await SettingGroup.findOne({ groupName });
+
+    if (!settingGroup) throw new HttpError("No group found.", 404);
+
+    return {
+      ...settingGroup._doc,
+      _id: settingGroup._id.toString(),
+    };
+  },
 };

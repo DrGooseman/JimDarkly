@@ -19,6 +19,8 @@
                                         <div class="group-header-delete">
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteSettingModal" 
                                             onclick="populateDeleteGroupModal('<%= group.groupName %>', '<%= group._id %>')">X</button>
+                                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#graphqlModal" 
+                                            onclick="populateGraphqlModal('<%= group.groupName %>')">i</button>
                                         </div>
                                     <div class="group-header-name"><h1 class="group-header-name"><%= group.groupName %></h1></div>
                                    
@@ -40,7 +42,7 @@
                                         <th scope="row">1</th>
                                         <td><%= setting.key %></td>
                                         <td><%= setting.value %></td>
-                                        <td><%= setting.lastUpdated %></td>
+                                        <td><%= setting.lastUpdated.toLocaleString("de-DE") %></td>
                                         <td><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editSettingModal" 
                                             onclick="populateEditSettingModal('<%= group.groupName %>', '<%= group._id %>', '<%= setting.key %>', '<%= setting.value %>')">EDIT</button>
                                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteSettingModal" 
@@ -196,6 +198,27 @@
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                   <button type="submit" form="delete-setting-form" class="btn btn-primary">Delete Setting</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+                  <!-- graphql modal -->
+        <div class="modal fade" id="graphqlModal" tabindex="-1" role="dialog" aria-labelledby="graphqlModal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="graphqlModalTitle">graphql</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <p id="graphqlModalBody"></p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>

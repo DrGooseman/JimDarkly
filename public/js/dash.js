@@ -33,3 +33,11 @@ function populateDeleteSettingModal(settingKey, settingGroupId) {
   document.getElementById("delete-setting-form").action =
     "/dash/groups/delete-setting/" + settingGroupId + "&" + settingKey;
 }
+
+function populateGraphqlModal(groupName) {
+  document.getElementById("graphqlModalTitle").innerHTML =
+    "GraphQL Query for '" + groupName + "'";
+  document.getElementById("graphqlModalBody").innerHTML = `query{
+    text
+  }`;
+}
